@@ -25,6 +25,7 @@
 !.gitignore
 !.editorconfig
 !.gitlab-ci.yml
+!/.github
 .DS_Store
 Thumbs.db
 *.zip
