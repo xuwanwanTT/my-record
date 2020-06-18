@@ -1,0 +1,36 @@
+.list-wrap {
+  width: 80%;
+  max-height: 60%;
+  margin: 0 auto;
+  border: 1px solid #000;
+}
+
+.list-wrap > .list-header {
+  width: 100%;
+  display: flex;
+  font-size: 20px;
+  padding-left: 20px;
+  margin-top: 10px;
+  box-sizing: border-box;
+}
+
+.list-wrap > .list-content-wrap {
+  height: 350px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.list-wrap > .list-content-wrap > .list-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  font-size: 16px;
+  padding-left: 20px;
+}
+
+.list-wrap > .list-content-wrap > .list-content > .list-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+}
