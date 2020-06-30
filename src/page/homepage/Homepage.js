@@ -19,7 +19,49 @@ export default () => {
 
   useEffect(() => {
 
-    axios.get('./static/api-simulation/data.json').then(res => {
+    async function getDataRequest() {
+      let res1, res2, res3;
+      try {
+        res1 = await axios.get('./static/api-simulation/data.json');
+      } catch (err) {
+        res1 = {
+          data: {
+            data: [{
+              "date": "xxxx-xx-xx",
+              "value_m": "",
+              "value_e": "",
+              "sport": []
+            }]
+          }
+        };
+      }
+
+      try {
+        res2 = await axios.get('./static/api-simulation/food.json');
+      } catch (err) {
+        res2 = { data: {} };
+      };
+
+      try {
+        res3 = await axios.get('./static/api-simulation/energy.json');
+      } catch (err) {
+        res3 = {
+          data: {
+            data: [{
+              "date": "xxxx-xx-xx",
+              "早餐": [],
+              "午餐": [],
+              "晚餐": [],
+              "零食": []
+            }]
+          }
+        }
+      };
+      return { data: res1.data.data, food: res2.data, resData: res3.data.data };
+    };
+
+    getDataRequest().then(res => {
+      const { data, food, resData } = { ...res };
       const header = ['时间', '体重-早(KG)', '体重-晚(KG)', '平均(KG)', 'BMI', '状态', '距离目标(KG)', '运动'];
       const content = [];
       const width = [1, 1.2, 1.2, 1, 0.5, 0.5, 1.2, 1.2];
@@ -27,7 +69,6 @@ export default () => {
       const dataX = [];
       const dataY = [];
       let todayWeight = 1;
-      let data = res.data.data;
       data.forEach((s, i) => {
         let m = (s.value_m / 2).toFixed(2);
         let e = (s.value_e / 2).toFixed(2);
@@ -51,45 +92,41 @@ export default () => {
         dataX.unshift(s.date);
         dataY.unshift(average === '--' ? 0 : average);
       });
+
+      let weight = 0;
+      let energy = 0;
+      const dataXkj = [];
+      const dataYkj = [];
+      const totalData = [];
+
+      resData.forEach((s, i) => {
+        let temp_e = 0;
+        let temp_w = 0;
+        let temp_data = {};
+
+        for (let n in s) {
+          temp_data[n] = s[n];
+          if (Array.isArray(s[n])) {
+            s[n].forEach(m => {
+              m.energy = m.product ? ~~(food[m.name] * 4.184) : ~~(food[m.name] / 100 * m.value * 4.184);
+              temp_e += m.energy;
+              temp_w += m.value;
+            });
+          }
+        }
+        temp_data.weight = temp_w;
+        temp_data.energy = temp_e;
+        totalData.push(temp_data);
+        dataXkj.unshift(s.date);
+        dataYkj.unshift(temp_e);
+      });
+
+      energyRef.current.setData(totalData, weight, energy);
+
       setListData({ header, content, width, height });
       setLineData({ dataX, dataY, gb: BMIGB * (height * height) });
-      axios.get('./static/api-simulation/food.json').then(res => {
-        const food = res.data;
-        axios.get('./static/api-simulation/energy.json').then(res => {
-          const resData = res.data.data;
-          const data = {};
-          let weight = 0;
-          let energy = 0;
-          const dataX = [];
-          const dataY = [];
-          const totalData = [];
+      setLineKjData({ dataX: dataXkj, dataY: dataYkj, gb: (66 + (13.7 * todayWeight) + (5 * MYHEIGHT) - (6.8 * MYYEAR)) * 4.184 });
 
-          resData.forEach((s, i) => {
-            let temp_e = 0;
-            let temp_w = 0;
-            let temp_data = {};
-
-            for (let n in s) {
-              temp_data[n] = s[n];
-              if (Array.isArray(s[n])) {
-                s[n].forEach(m => {
-                  m.energy = m.product ? ~~(food[m.name] * 4.184) : ~~(food[m.name] / 100 * m.value * 4.184);
-                  temp_e += m.energy;
-                  temp_w += m.value;
-                });
-              }
-            }
-            temp_data.weight = temp_w;
-            temp_data.energy = temp_e;
-            totalData.push(temp_data);
-            dataX.unshift(s.date);
-            dataY.unshift(temp_e);
-          });
-
-          energyRef.current.setData(totalData, weight, energy);
-          setLineKjData({ dataX, dataY, gb: (66 + (13.7 * todayWeight) + (5 * MYHEIGHT) - (6.8 * MYYEAR)) * 4.184 });
-        });
-      });
     });
 
   }, []);
