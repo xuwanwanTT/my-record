@@ -2,14 +2,25 @@
   "code": 200,
   "data": [
     {
+      "date": "2020-07-02",
+      "value_m": "165.4",
+      "value_e": "166.1",
+      "sport": []
+    },
+    {
       "date": "2020-07-01",
       "value_m": "165.4",
-      "value_e": "",
+      "value_e": "166.1",
       "sport": [
         {
           "name": "跳绳",
           "value": 3000,
           "unit": "下"
+        },
+        {
+          "name": "慢走",
+          "value": 1,
+          "unit": "小时"
         }
       ]
     },
