@@ -82,7 +82,7 @@ export default () => {
           times--;
         }
         let average = times ? ((s.value_m / 2 + s.value_e / 2) / times).toFixed(2) : '--';
-        let BMI = average === '--' ? '--' : Math.round(average / (height * height));
+        let BMI = average === '--' ? '--' : Math.ceil(average / (height * height));
         let target = average === '--' ? '--' : (BMIGB * (height * height) - average).toFixed(2);
         let state = judgeWeight(BMI);
         let sport = s.sport;
