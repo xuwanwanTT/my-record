@@ -3,9 +3,15 @@
   "data": [
     {
       "date": "2020-07-09",
-      "value_m": "",
-      "value_e": "",
-      "sport": []
+      "value_m": "163.6",
+      "value_e": "164.4",
+      "sport": [
+        {
+          "name": "俯卧撑",
+          "value": 30,
+          "unit": "个"
+        }
+      ]
     },
     {
       "date": "2020-07-08",
