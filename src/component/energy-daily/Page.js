@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import './page.css';
 
 export default class Page extends React.Component {
@@ -60,7 +60,7 @@ export default class Page extends React.Component {
   }
 
   componentDidMount() {
-    const me = this;
+    // const me = this;
   }
 
   render() {

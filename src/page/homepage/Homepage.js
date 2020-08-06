@@ -3,7 +3,7 @@ import './homepage.css';
 import List from '../../component/list/List';
 import Line from '../../component/line/Line';
 import LineKJ from '../../component/line/LineKJ';
-import InfoFillIn from '../../component/info-fill-in/FillIn';
+// import InfoFillIn from '../../component/info-fill-in/FillIn';
 import EnergyDaily from '../../component/energy-daily/Page';
 import axios from 'axios';
 
@@ -100,25 +100,22 @@ export default () => {
       const totalData = [];
 
       resData.forEach((s, i) => {
-        let temp_e = 0;
-        let temp_w = 0;
-        let temp_data = {};
+        let temp_data = { weight: 0, energy: 0 };
 
         for (let n in s) {
           temp_data[n] = s[n];
           if (Array.isArray(s[n])) {
             s[n].forEach(m => {
               m.energy = m.product ? ~~(food[m.name] * 4.184) : ~~(food[m.name] / 100 * m.value * 4.184);
-              temp_e += m.energy;
-              temp_w += m.value;
+              temp_data.energy += m.energy;
+              temp_data.weight += m.value;
             });
           }
         }
-        temp_data.weight = temp_w;
-        temp_data.energy = temp_e;
+
         totalData.push(temp_data);
         dataXkj.unshift(s.date);
-        dataYkj.unshift(temp_e);
+        dataYkj.unshift(temp_data.energy);
       });
 
       energyRef.current.setData(totalData, weight, energy);
@@ -139,7 +136,7 @@ export default () => {
         <Line data={lineData} style={{ width: 600 }} />
         <LineKJ data={lineKjData} style={{ width: 600 }} />
       </div>
-      <InfoFillIn />
+      {/* <InfoFillIn /> */}
       <EnergyDaily ref={energyRef} />
     </>
   );

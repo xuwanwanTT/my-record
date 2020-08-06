@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React from 'react';
 import './fill-in.css';
 import AddInput from './AddInput';
 
@@ -14,12 +14,12 @@ export default class Page extends React.Component {
   }
 
   infoComit() {
-    const data = {
-      date: this['info0'].value,
-      value_m: this['info1'].value,
-      value_e: this['info2'].value,
-      sport: this.sportRef.getData()
-    };
+    // const data = {
+    //   date: this['info0'].value,
+    //   value_m: this['info1'].value,
+    //   value_e: this['info2'].value,
+    //   sport: this.sportRef.getData()
+    // };
   }
 
   showInput() {
