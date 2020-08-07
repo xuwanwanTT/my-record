@@ -3,11 +3,25 @@ import echarts from 'echarts';
 
 export default (props) => {
   const domWrapRef = useRef();
+  let diff = 0;
+  let timer = 0;
 
-  useEffect(() => {
+  const doAni = () => {
+    if (timer) return false;
+    clearInterval(timer);
     const myChat = echarts.init(domWrapRef.current);
     const { dataX, dataY, gb } = props.data;
-    const option = {
+    timer = setInterval(() => {
+      diff++;
+      let datax = dataX.slice(0, 1 + diff);
+      let datay = dataY.slice(0, 1 + diff);
+      if (diff > dataX.length) clearInterval(timer);
+      myChat.setOption(initOption(datax, datay, gb), true);
+    }, 800);
+  };
+
+  const initOption = (dataX, dataY, gb) => {
+    return {
       tooltip: {
         trigger: 'axis',
         formatter: '{b}<br />{a}: {c}kg'
@@ -41,11 +55,21 @@ export default (props) => {
           }
         }
       ]
-    };
+    };;
+  }
 
-    myChat.setOption(option, true);
+  useEffect(() => {
+    const myChat = echarts.init(domWrapRef.current);
+    const { dataX, dataY, gb } = props.data;
+
+    myChat.setOption(initOption(dataX, dataY, gb), true);
 
   }, [props.data]);
 
-  return <div style={{ width: 800, height: 300, ...props.style }} ref={domWrapRef} />;
+  return <div ref={domWrapRef}
+    onClick={doAni}
+    style={{
+      width: 800, height: 300,
+      ...props.style
+    }} />;
 };

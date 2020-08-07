@@ -8,8 +8,6 @@ import EnergyDaily from '../../component/energy-daily/Page';
 import axios from 'axios';
 
 const BMIGB = 22;
-const MYYEAR = new Date().getFullYear() - 1993;
-const MYHEIGHT = 175;
 
 export default () => {
   const [listData, setListData] = useState({ header: [], content: [], width: [] });
@@ -68,7 +66,8 @@ export default () => {
       const height = 1.76;
       const dataX = [];
       const dataY = [];
-      let todayWeight = BMIGB * (height * height);
+      let GBWEIGHT = BMIGB * (height * height);
+      let todayWeight = [];
       data.forEach((s, i) => {
         let m = (s.value_m / 2).toFixed(2);
         let e = (s.value_e / 2).toFixed(2);
@@ -87,7 +86,12 @@ export default () => {
         let state = judgeWeight(BMI);
         let sport = s.sport;
         let temp = [s.date, m, e, average, BMI, state, target, sport];
-        if (i === 0 && average !== '--') todayWeight = average;
+        // if (i === 0 && average !== '--') todayWeight = average;
+        if (average !== '--') {
+          todayWeight.unshift(average);
+        } else {
+          todayWeight.unshift(GBWEIGHT);
+        }
         content.push(temp);
         dataX.unshift(s.date);
         dataY.unshift(average === '--' ? 0 : average);
@@ -122,7 +126,7 @@ export default () => {
 
       setListData({ header, content, width, height });
       setLineData({ dataX, dataY, gb: BMIGB * (height * height) });
-      setLineKjData({ dataX: dataXkj, dataY: dataYkj, gb: (66 + (13.7 * todayWeight) + (5 * MYHEIGHT) - (6.8 * MYYEAR)) * 4.184 });
+      setLineKjData({ dataX: dataXkj, dataY: dataYkj, gb: todayWeight });
 
     });
 
