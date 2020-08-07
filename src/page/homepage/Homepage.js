@@ -88,9 +88,9 @@ export default () => {
         let temp = [s.date, m, e, average, BMI, state, target, sport];
         // if (i === 0 && average !== '--') todayWeight = average;
         if (average !== '--') {
-          todayWeight.unshift(average);
+          todayWeight.push(average);
         } else {
-          todayWeight.unshift(GBWEIGHT);
+          todayWeight.push(GBWEIGHT);
         }
         content.push(temp);
         dataX.unshift(s.date);

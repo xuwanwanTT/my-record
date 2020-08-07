@@ -56,7 +56,7 @@ export default (props) => {
         }
       ]
     };;
-  }
+  };
 
   useEffect(() => {
     const myChat = echarts.init(domWrapRef.current);
