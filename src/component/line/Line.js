@@ -27,9 +27,9 @@ export default (props) => {
         formatter: '{b}<br />{a}: {c}kg'
       },
       grid: {
-        left: '3%',
-        right: '8%',
-        bottom: '3%',
+        left: 50,
+        right: 100,
+        bottom: 45,
         containLabel: true
       },
       xAxis: {
@@ -43,6 +43,9 @@ export default (props) => {
         name: 'KG',
         axisTick: { show: false }, // 刻度 线
       },
+      dataZoom: [{
+        type: 'slider',
+      }],
       series: [
         {
           type: 'line',
@@ -67,7 +70,7 @@ export default (props) => {
   }, [props.data]);
 
   return <div ref={domWrapRef}
-    onClick={doAni}
+    // onClick={doAni}
     style={{
       width: 800, height: 300,
       ...props.style

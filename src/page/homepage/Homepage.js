@@ -137,8 +137,8 @@ export default () => {
       <h1 className={'page-title'}>虚玩玩加油！减肥！减肥！！减肥！！！</h1>
       <List data={listData} />
       <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <Line data={lineData} style={{ width: 600 }} />
-        <LineKJ data={lineKjData} style={{ width: 600 }} />
+        <Line data={lineData} style={{ width: 750, height: 345 }} />
+        <LineKJ data={lineKjData} style={{ width: 750, height: 345 }} />
       </div>
       {/* <InfoFillIn /> */}
       <EnergyDaily ref={energyRef} />

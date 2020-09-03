@@ -11,9 +11,9 @@ const initOption = (dataX, dataY, gb, diff) => {
       formatter: '{b}<br />{a}: {c} kj'
     },
     grid: {
-      left: '3%',
-      right: '10%',
-      bottom: '3%',
+      left: 50,
+      right: 100,
+      bottom: 45,
       containLabel: true
     },
     xAxis: {
@@ -21,6 +21,9 @@ const initOption = (dataX, dataY, gb, diff) => {
       axisTick: { show: false }, // 刻度 线
       data: dataX
     },
+    dataZoom: [{
+      type: 'slider',
+    }],
     yAxis: {
       type: 'value',
       name: 'KJ',
@@ -76,7 +79,8 @@ export default (props) => {
   }, [dataX, dataY, gb, timer]);
 
   return <div ref={domWrapRef}
-    onClick={doAni} style={{
+    // onClick={doAni}
+    style={{
       width: 800, height: 300,
       ...props.style
     }} />;
