@@ -23,6 +23,7 @@ const initOption = (dataX, dataY, gb, diff) => {
     },
     dataZoom: [{
       type: 'slider',
+      startValue: dataX.length - 30
     }],
     yAxis: {
       type: 'value',

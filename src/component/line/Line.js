@@ -45,6 +45,7 @@ export default (props) => {
       },
       dataZoom: [{
         type: 'slider',
+        startValue: dataX.length - 30
       }],
       series: [
         {
