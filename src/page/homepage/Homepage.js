@@ -94,7 +94,7 @@ export default () => {
         }
         content.push(temp);
         dataX.unshift(s.date);
-        dataY.unshift(average === '--' ? 0 : average);
+        dataY.unshift(average === '--' ? '' : average);
       });
 
       let weight = 0;
