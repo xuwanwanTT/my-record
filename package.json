@@ -17,6 +17,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "push": "git add . && git commit -m feat:新增记录 && git push",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "relate": "node ./src/relate.js"
