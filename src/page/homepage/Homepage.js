@@ -1,11 +1,13 @@
 import React, { useEffect, useState, useRef } from 'react';
-import './homepage.css';
+import './homepage.less';
 import List from '../../component/list/List';
 import Line from '../../component/line/Line';
 import LineKJ from '../../component/line/LineKJ';
 // import InfoFillIn from '../../component/info-fill-in/FillIn';
 import EnergyDaily from '../../component/energy-daily/Page';
 import axios from 'axios';
+import Dialog from '../../component/dialog/Dialog.js';
+import DirtyTalk from '../../component/dirty-talk/DirtyTalk.js';
 
 const BMIGB = 22;
 
@@ -14,9 +16,16 @@ export default () => {
   const [lineData, setLineData] = useState({ dataX: [], dataY: [], gb: 0 });
   const [lineKjData, setLineKjData] = useState({ dataX: [], dataY: [], gb: 0 });
   const energyRef = useRef();
+  const [showListWeight, setShowListWeight] = useState(false);
+  const [showListFood, setShowListFood] = useState(false);
+  const [showListSport, setShowListSport] = useState(false);
+  const btnList = [
+    { name: '体重记录表', fn: setShowListWeight },
+    { name: '饮食记录表', fn: setShowListFood },
+    { name: '运动记录表', fn: setShowListSport },
+  ];
 
   useEffect(() => {
-
     async function getDataRequest() {
       let res1, res2, res3;
       try {
@@ -134,17 +143,32 @@ export default () => {
 
   return (
     <>
-      <h1 className={'page-title'}>虚玩玩加油！减肥！减肥！！减肥！！！</h1>
+
+      <DirtyTalk />
+
+      <div className={'button-wrap'}>
+        {btnList.map(s => (
+          <button onClick={() => s.fn(true)}>{s.name}</button>
+        ))}
+      </div>
+
       <List data={listData} />
+
       <div style={{ display: 'flex', justifyContent: 'center' }}>
         <Line data={lineData} style={{ width: 750, height: 345 }} />
         <LineKJ data={lineKjData} style={{ width: 750, height: 345 }} />
       </div>
-      {/* <InfoFillIn /> */}
+
       <EnergyDaily ref={energyRef} />
+
+      <Dialog show={showListWeight}>123</Dialog>
+
+      <Dialog show={showListFood}>456</Dialog>
+
+      <Dialog show={showListSport}>789</Dialog>
+
     </>
   );
-
 };
 
 function judgeWeight(data, sex) {
