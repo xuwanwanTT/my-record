@@ -8,6 +8,9 @@ import EnergyDaily from '../../component/energy-daily/Page';
 import axios from 'axios';
 import Dialog from '../../component/dialog/Dialog.js';
 import DirtyTalk from '../../component/dirty-talk/DirtyTalk.js';
+import WeightForm from '../../component/form/WeightForm.js';
+import FoodForm from '../../component/form/FoodForm.js';
+import SportForm from '../../component/form/SportForm.js';
 
 const BMIGB = 22;
 
@@ -24,6 +27,24 @@ export default () => {
     { name: '饮食记录表', fn: setShowListFood },
     { name: '运动记录表', fn: setShowListSport },
   ];
+
+  const postRecord = (type, data, id) => {
+    axios({
+      baseURL: 'http://localhost:8080',
+      method: 'post',
+      url: '/my-record/join-record',
+      data: {
+        userId: 1,
+        id,
+        type,
+        data
+      }
+    }).then(res => {
+      setShowListWeight(false);
+      setShowListFood(false);
+      setShowListSport(false);
+    });
+  };
 
   useEffect(() => {
     async function getDataRequest() {
@@ -161,11 +182,23 @@ export default () => {
 
       <EnergyDaily ref={energyRef} />
 
-      <Dialog show={showListWeight}>123</Dialog>
+      <Dialog show={showListWeight}>
+        <WeightForm data={[]}
+          onSubmit={(data) => { postRecord('weight', data) }}
+          onClose={() => { setShowListWeight(false) }} />
+      </Dialog>
 
-      <Dialog show={showListFood}>456</Dialog>
+      <Dialog show={showListFood}>
+        <FoodForm data={[]}
+          onSubmit={(data) => { postRecord('food', data) }}
+          onClose={() => { setShowListFood(false) }} />
+      </Dialog>
 
-      <Dialog show={showListSport}>789</Dialog>
+      <Dialog show={showListSport}>
+        <SportForm data={[]}
+          onSubmit={(data) => { postRecord('sport', data) }}
+          onClose={() => { setShowListSport(false) }} />
+      </Dialog>
 
     </>
   );
