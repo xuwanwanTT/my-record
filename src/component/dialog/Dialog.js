@@ -8,7 +8,7 @@ const Dialog = ({ show, onClose, children }) => {
     <div className={`my-dialog ${show ? 'my-dialog-show' : ''}`}>
       <div className={'my-dialog-bg'} />
       <div className={'my-dialog-content'}>
-        <div className={'my-dialog-close'} onClick={onClose}>×</div>
+        {onClose ? <div className={'my-dialog-close'} onClick={onClose}>×</div> : null}
         {children}
       </div>
     </div>,
