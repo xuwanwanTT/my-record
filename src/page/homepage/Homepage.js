@@ -8,9 +8,7 @@ import EnergyDaily from '../../component/energy-daily/Page';
 import axios from 'axios';
 import Dialog from '../../component/dialog/Dialog.js';
 import DirtyTalk from '../../component/dirty-talk/DirtyTalk.js';
-import WeightForm from '../../component/form/WeightForm.js';
-import FoodForm from '../../component/form/FoodForm.js';
-import SportForm from '../../component/form/SportForm.js';
+import FromList from '../../component/form/FormList.js';
 
 const BMIGB = 22;
 
@@ -19,13 +17,9 @@ export default () => {
   const [lineData, setLineData] = useState({ dataX: [], dataY: [], gb: 0 });
   const [lineKjData, setLineKjData] = useState({ dataX: [], dataY: [], gb: 0 });
   const energyRef = useRef();
-  const [showListWeight, setShowListWeight] = useState(false);
-  const [showListFood, setShowListFood] = useState(false);
-  const [showListSport, setShowListSport] = useState(false);
+  const [showForm, setShowForm] = useState(false);
   const btnList = [
-    { name: '体重记录表', fn: setShowListWeight },
-    { name: '饮食记录表', fn: setShowListFood },
-    { name: '运动记录表', fn: setShowListSport },
+    { name: '记录表', fn: setShowForm },
   ];
   const [date, setDate] = useState('');
 
@@ -191,23 +185,10 @@ export default () => {
 
       <EnergyDaily ref={energyRef} /> */}
 
-      <Dialog show={showListWeight}>
-        <WeightForm data={[]}
-          date={date}
+      <Dialog show={showForm}>
+        <FromList date={'2020-05-20'}
           onSubmit={(data) => { postRecord('weight', data) }}
-          onClose={() => { setShowListWeight(false) }} />
-      </Dialog>
-
-      <Dialog show={showListFood}>
-        <FoodForm data={[]}
-          onSubmit={(data) => { postRecord('food', data) }}
-          onClose={() => { setShowListFood(false) }} />
-      </Dialog>
-
-      <Dialog show={showListSport}>
-        <SportForm data={[]}
-          onSubmit={(data) => { postRecord('sport', data) }}
-          onClose={() => { setShowListSport(false) }} />
+          onClose={() => { setShowForm(false) }} />
       </Dialog>
 
     </>

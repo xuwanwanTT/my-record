@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 const MyInput = ({ onChange, value, placeholder, ...props }) => {
+
   return <input
     style={{
       height: 32,
