@@ -1,28 +1,33 @@
 import React, { useEffect, useState } from 'react';
 import './form.less';
 import MyInput from './module/MyInput.js';
-import AddItemList from './module/AddItemList.js';
 import LabelInput from './module/LabelInput.js';
 
 const checkChange = (data, newData) => {
   return JSON.stringify(data) !== JSON.stringify(newData);
 }
 
-const FormList = ({ weight = {}, food = [], sport = [], date, onSubmit, onClose, ...props }) => {
+const FormList = ({ weight = {}, food = [
+  { name: "早餐", data: [] },
+  { name: "午餐", data: [] },
+  { name: "晚餐", data: [] },
+  { name: "零食", data: [] }
+], sport = [], date, onSubmit, onClose, onChangeDate }) => {
 
-  const [dateData, setDateData] = useState(date);
-  const [morning, setMorning] = useState(weight.morning || '');
-  const [everning, setEverning] = useState(weight.morning || '');
-  const [foodData, setFoodData] = useState(food);
-  const [sportData, setSportData] = useState(sport);
+  const [dateData, setDateData] = useState(JSON.parse(date));
+  const [weightData, setWeightData] = useState(JSON.parse(weight));
+  const [foodData, setFoodData] = useState(JSON.parse(food));
+  const [sportData, setSportData] = useState(JSON.parse(sport));
+  const [dateLock, setDateLock] = useState(false);
 
   const submit = () => {
     if (onSubmit instanceof Function) {
-      if (isNaN(+morning) || isNaN(+everning)) {
-        alert(`请输入数字`)
+      const { morning, evening } = weightData;
+      if ((morning && isNaN(+morning)) || (evening && isNaN(+evening))) {
+        alert(`请输入数字`);
       } else {
         onSubmit({
-          weight: { morning: +morning, everning: +everning || null },
+          weight: weightData,
           food: foodData,
           sport: sportData,
           date: dateData
@@ -33,6 +38,12 @@ const FormList = ({ weight = {}, food = [], sport = [], date, onSubmit, onClose,
 
   const close = () => {
     if (onClose instanceof Function) onClose();
+  };
+
+  const changeWeightValue = (e, type) => {
+    const data = JSON.parse(JSON.stringify(weightData));
+    data[type] = e.target.value;
+    setWeightData(data);
   };
 
   const addItem = () => {
@@ -57,37 +68,97 @@ const FormList = ({ weight = {}, food = [], sport = [], date, onSubmit, onClose,
     setSportData(data);
   };
 
-  useEffect(() => {
-    if (checkChange(foodData, food)) setFoodData(foodData);
-  }, [food, foodData]);
+  const addFoodItem = (index) => {
+    let data = JSON.parse(JSON.stringify(foodData));
+    data[index].data.push({});
+    setFoodData(data);
+  };
+
+  const deleteFoodItem = (index, i) => {
+    let data = JSON.parse(JSON.stringify(foodData));
+    data[index].data.splice(i, 1);
+    setFoodData(data);
+  };
+
+  const changeFoodValue = (type, index, i, e) => {
+    let data = JSON.parse(JSON.stringify(foodData));
+    let item = data[index].data;
+    if (type === 'label') {
+      item[i].name = e.target.value;
+    } else {
+      item[i].value = e.target.value;
+    }
+    setFoodData(data);
+  };
+
+  const dateChangeValue = (e) => {
+    setDateData(e.target.value);
+  }
+
+  const dateLockChange = () => {
+    if (dateLock) {
+      if (onChangeDate instanceof Function) onChangeDate(dateData);
+    }
+    setDateLock(!dateLock);
+  }
 
   useEffect(() => {
-    if (checkChange(sportData, sport)) setSportData(sportData);
-  }, [sport, sportData]);
+    setFoodData(JSON.parse(food));
+  }, [food]);
+
+  useEffect(() => {
+    setSportData(JSON.parse(sport));
+  }, [sport]);
+
+  useEffect(() => {
+    setWeightData(JSON.parse(weight));
+  }, [weight]);
 
   return (
     <div className={'form-list-wrap'}>
 
-      <div>
-        <MyInput value={dateData} onChange={(e) => setDateData(e.target.value)} />
+      <div className={'form-list-date'}>
+        <MyInput disabled={!dateLock} value={dateData} onChange={dateChangeValue} />
+        <span className={'list-date-button'} onClick={dateLockChange}>{dateLock ? '确认' : '变更'}</span>
       </div>
 
       <div className={'form-list-weight'}>
-        <MyInput value={morning} onChange={(e) => setMorning(e.target.value)} />
-        <MyInput value={everning} onChange={(e) => setEverning(e.target.value)} />
+        <MyInput placeholder={'白天体重'} value={weightData.morning || ''} onChange={(e) => changeWeightValue(e, 'morning')} />
+        <MyInput placeholder={'夜间体重'} value={weightData.evening || ''} onChange={(e) => changeWeightValue(e, 'evening')} />
       </div>
 
-      <div className={'form-list-food'}></div>
+      <div className={'form-list-food'}>
+        <div className={'list-food-title'}>食物摄入量</div>
+        {foodData.map((item, index) => (
+          <div key={'record' + index} className={'list-food-item'}>
+            <div className={'item-record-name'}>{item.name}</div>
+            <div className={'item-record-value'}>
+              {item.data?.map((s, i) => <LabelInput key={i}
+                value={s.value}
+                name={s.name}
+                placeholderName={'食物名称'}
+                placeholderValue={'食物重量'}
+                onDelete={() => deleteFoodItem(index, i)}
+                onChange={(type, e) => changeFoodValue(type, index, i, e)} />)}
+            </div>
+            <div className={'add-item-button'} onClick={() => { addFoodItem(index) }} />
+          </div>
+        ))}
+      </div>
 
       <div className={'form-list-sport'}>
-        <div onClick={addItem}>add sport</div>
-        {sportData.map((s, i) => <LabelInput key={i} value={s.value}
+        <div>运动量</div>
+        {sportData.map((s, i) => <LabelInput key={i}
+          value={s.value}
           name={s.name}
+          placeholderName={'运动名称'}
+          placeholderValue={'运动重量'}
           onDelete={() => deleteSportItem(i)}
           onChange={(type, e) => changeSportValue(type, i, e)} />)}
+        <div className={'add-item-button'} onClick={addItem} />
       </div>
 
-      <div>
+      <div className={'form-list-button'}>
         <div onClick={submit}>确认</div>
         <div onClick={close}>取消</div>
       </div>

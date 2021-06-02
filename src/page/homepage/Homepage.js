@@ -9,8 +9,11 @@ import axios from 'axios';
 import Dialog from '../../component/dialog/Dialog.js';
 import DirtyTalk from '../../component/dirty-talk/DirtyTalk.js';
 import FromList from '../../component/form/FormList.js';
+import moment from 'moment';
 
 const BMIGB = 22;
+
+const BASEURL = window.BASEURL;
 
 export default () => {
   const [listData, setListData] = useState({ header: [], content: [], width: [] });
@@ -19,35 +22,72 @@ export default () => {
   const energyRef = useRef();
   const [showForm, setShowForm] = useState(false);
   const btnList = [
-    { name: '记录表', fn: setShowForm },
+    { name: '开启记录', fn: setShowForm },
   ];
-  const [date, setDate] = useState('');
+  const [date, setDate] = useState(moment().format('YYYY-MM-DD'));
+  const [formData, setFormData] = useState({
+    weight: JSON.stringify({}),
+    sport: JSON.stringify([]),
+    date: JSON.stringify(date),
+    food: JSON.stringify([
+      { name: "早餐", data: [] },
+      { name: "午餐", data: [] },
+      { name: "晚餐", data: [] },
+      { name: "零食", data: [] }
+    ])
+  });
 
-  const postRecord = (type, data, id) => {
-    console.log(data);
-
+  const postRecord = (data) => {
     axios({
-      baseURL: 'http://localhost:8080',
+      baseURL: BASEURL,
       method: 'post',
       url: '/my-record/join-record',
       data: {
         userId: 1,
-        id,
-        type,
-        data
+        ...data
       }
     }).then(res => {
-      setShowListWeight(false);
-      setShowListFood(false);
-      setShowListSport(false);
+      setShowForm(false);
     }).catch(err => {
       alert(err);
     })
   };
 
-  useEffect(() => {
-    setDate('1993-08-12')
-  }, []);
+  const getData = (date) => {
+    date && setDate(date);
+    axios({
+      baseURL: BASEURL,
+      method: 'get',
+      url: `/my-record/data?userId=1&date=${date}`,
+    }).then(res => {
+      const resData = res.data.data;
+      if (date) {
+        let resFormData = {
+          weight: {},
+          sport: [],
+          date,
+          food: [
+            { name: "早餐", data: [] },
+            { name: "午餐", data: [] },
+            { name: "晚餐", data: [] },
+            { name: "零食", data: [] }
+          ]
+        };
+        for (let n in resFormData) {
+          if (resData.length) {
+            resFormData[n] = resData[0][n] ? JSON.stringify(resData[0][n]) : JSON.stringify(resFormData[n]);
+          } else {
+            resFormData[n] = JSON.stringify(resFormData[n]);
+          }
+        }
+        setFormData(resFormData);
+      } else { }
+    }).catch(err => {
+      alert(err);
+    });
+  };
+
+  useEffect(() => { }, []);
 
   // useEffect(() => {
   //   async function getDataRequest() {
@@ -171,8 +211,11 @@ export default () => {
       <DirtyTalk />
 
       <div className={'button-wrap'}>
-        {btnList.map(s => (
-          <button onClick={() => s.fn(true)}>{s.name}</button>
+        {btnList.map((s, i) => (
+          <button key={'btn' + i} onClick={() => {
+            s.fn(true);
+            getData(date);
+          }}>{s.name}</button>
         ))}
       </div>
 
@@ -186,8 +229,10 @@ export default () => {
       <EnergyDaily ref={energyRef} /> */}
 
       <Dialog show={showForm}>
-        <FromList date={'2020-05-20'}
-          onSubmit={(data) => { postRecord('weight', data) }}
+        <FromList date={date}
+          {...formData}
+          onChangeDate={getData}
+          onSubmit={postRecord}
           onClose={() => { setShowForm(false) }} />
       </Dialog>
 

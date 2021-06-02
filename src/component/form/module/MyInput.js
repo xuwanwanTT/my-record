@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 
-const MyInput = ({ onChange, value, placeholder, ...props }) => {
+const MyInput = ({ disabled, onChange, value, placeholder, ...props }) => {
 
   return <input
     style={{
@@ -12,6 +12,7 @@ const MyInput = ({ onChange, value, placeholder, ...props }) => {
       boxSizing: 'border-box',
       ...props.style
     }}
+    disabled={disabled ? 'disabled' : ''}
     type={props.type}
     placeholder={placeholder || '请输入'}
     onChange={onChange}
