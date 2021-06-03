@@ -123,8 +123,8 @@ const FormList = ({ weight = {}, food = [
       </div>
 
       <div className={'form-list-weight'}>
-        <MyInput placeholder={'白天体重'} value={weightData.morning || ''} onChange={(e) => changeWeightValue(e, 'morning')} />
-        <MyInput placeholder={'夜间体重'} value={weightData.evening || ''} onChange={(e) => changeWeightValue(e, 'evening')} />
+        <MyInput placeholder={'白天体重(kg)'} value={weightData.morning || ''} onChange={(e) => changeWeightValue(e, 'morning')} />
+        <MyInput placeholder={'夜间体重(kg)'} value={weightData.evening || ''} onChange={(e) => changeWeightValue(e, 'evening')} />
       </div>
 
       <div className={'form-list-food'}>
@@ -137,7 +137,7 @@ const FormList = ({ weight = {}, food = [
                 value={s.value}
                 name={s.name}
                 placeholderName={'食物名称'}
-                placeholderValue={'食物重量'}
+                placeholderValue={'食物重量(g)'}
                 onDelete={() => deleteFoodItem(index, i)}
                 onChange={(type, e) => changeFoodValue(type, index, i, e)} />)}
             </div>
@@ -152,7 +152,7 @@ const FormList = ({ weight = {}, food = [
           value={s.value}
           name={s.name}
           placeholderName={'运动名称'}
-          placeholderValue={'运动重量'}
+          placeholderValue={'运动量'}
           onDelete={() => deleteSportItem(i)}
           onChange={(type, e) => changeSportValue(type, i, e)} />)}
         <div className={'add-item-button'} onClick={addItem} />

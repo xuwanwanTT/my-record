@@ -13,6 +13,8 @@ import moment from 'moment';
 
 const BMIGB = 22;
 
+const HEIGHT = 1.76;
+
 const BASEURL = window.BASEURL;
 
 export default () => {
@@ -36,6 +38,9 @@ export default () => {
       { name: "零食", data: [] }
     ])
   });
+  const [dataX, setDataX] = useState([]);
+  const [weightDataY, setWeightDataY] = useState([]);
+  const [foodDataY, setFoodDataY] = useState([]);
 
   const postRecord = (data) => {
     axios({
@@ -48,6 +53,7 @@ export default () => {
       }
     }).then(res => {
       setShowForm(false);
+      getData();
     }).catch(err => {
       alert(err);
     })
@@ -58,7 +64,7 @@ export default () => {
     axios({
       baseURL: BASEURL,
       method: 'get',
-      url: `/my-record/data?userId=1&date=${date}`,
+      url: `/my-record/data?userId=1${date ? '&date=' + date : ''}`,
     }).then(res => {
       const resData = res.data.data;
       if (date) {
@@ -81,13 +87,33 @@ export default () => {
           }
         }
         setFormData(resFormData);
-      } else { }
+      } else {
+        const dataX = [];
+        const foodDataY = [];
+        const weightDataY = [];
+
+        resData.forEach(s => {
+          const { date, food, weight, sport, foodData } = s;
+          const { morning, evening } = weight;
+
+          dataX.unshift(date);
+          weightDataY.unshift(getAverage(morning, evening));
+          foodDataY.unshift(foodData.total_kj);
+
+        });
+
+        setDataX(dataX);
+        setFoodDataY(foodDataY);
+        setWeightDataY(weightDataY);
+      }
     }).catch(err => {
       alert(err);
     });
   };
 
-  useEffect(() => { }, []);
+  useEffect(() => {
+    getData();
+  }, []);
 
   // useEffect(() => {
   //   async function getDataRequest() {
@@ -219,14 +245,14 @@ export default () => {
         ))}
       </div>
 
-      {/* <List data={listData} />
+      {/* <List data={listData} /> */}
 
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <Line data={lineData} style={{ width: 750, height: 345 }} />
-        <LineKJ data={lineKjData} style={{ width: 750, height: 345 }} />
+      <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
+        <Line dataX={dataX} dataY={weightDataY} gb={BMIGB * (HEIGHT * HEIGHT)} style={{ width: '45%', minWidth: 365, height: 325 }} />
+        <LineKJ dataX={dataX} dataY={foodDataY} gb={weightDataY} style={{ width: '45%', minWidth: 365, height: 325 }} />
       </div>
 
-      <EnergyDaily ref={energyRef} /> */}
+      {/* <EnergyDaily ref={energyRef} /> */}
 
       <Dialog show={showForm}>
         <FromList date={date}
@@ -254,4 +280,19 @@ function judgeWeight(data, sex) {
     }
   }
   return res;
+};
+
+function getAverage() {
+  let len = arguments.length;
+  let length = len;
+  let arr = [];
+  for (let i = 0; i < len; i++) {
+    let item = arguments[i];
+    if (item) {
+      arr.push(item);
+    } else {
+      length--;
+    }
+  }
+  return arr.length ? arr.reduce((a, b) => a + b) / (length || 1) : 0;
 }

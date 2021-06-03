@@ -49,7 +49,6 @@ const initOption = (dataX, dataY, gb, diff) => {
 
 export default (props) => {
   const domWrapRef = useRef();
-  const { dataX, dataY, gb } = props.data;
   let diff = 0;
   let timer = 0;
 
@@ -73,11 +72,9 @@ export default (props) => {
 
   useEffect(() => {
     const myChat = echarts.init(domWrapRef.current);
+    const { dataX, dataY, gb } = props;
     myChat.setOption(initOption(dataX, dataY, gb, 0), true);
-    return () => {
-      clearInterval(timer);
-    };
-  }, [dataX, dataY, gb, timer]);
+  }, [props]);
 
   return <div ref={domWrapRef}
     // onClick={doAni}

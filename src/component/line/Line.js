@@ -64,11 +64,11 @@ export default (props) => {
 
   useEffect(() => {
     const myChat = echarts.init(domWrapRef.current);
-    const { dataX, dataY, gb } = props.data;
+    const { dataX, dataY, gb } = props;
 
     myChat.setOption(initOption(dataX, dataY, gb), true);
 
-  }, [props.data]);
+  }, [props]);
 
   return <div ref={domWrapRef}
     // onClick={doAni}
