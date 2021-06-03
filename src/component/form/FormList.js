@@ -147,7 +147,7 @@ const FormList = ({ weight = {}, food = [
       </div>
 
       <div className={'form-list-sport'}>
-        <div>运动量</div>
+        <div className={'list-sport-title'}>运动量</div>
         {sportData.map((s, i) => <LabelInput key={i}
           value={s.value}
           name={s.name}
