@@ -114,6 +114,10 @@ const FormList = ({ weight = {}, food = [
     setWeightData(JSON.parse(weight));
   }, [weight]);
 
+  useEffect(() => {
+    setDateData(JSON.parse(date))
+  }, [date]);
+
   return (
     <div className={'form-list-wrap'}>
 

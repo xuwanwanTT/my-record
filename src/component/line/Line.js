@@ -63,10 +63,21 @@ export default (props) => {
   };
 
   useEffect(() => {
-    const myChat = echarts.init(domWrapRef.current);
     const { dataX, dataY, gb } = props;
 
-    myChat.setOption(initOption(dataX, dataY, gb), true);
+    let myChart = echarts.getInstanceByDom(domWrapRef.current);
+
+    if (!myChart) {
+      myChart = echarts.init(domWrapRef.current);
+      myChart.on('click', function (item) {
+        const date = item.name;
+        if (props.itemClick instanceof Function) props.itemClick(date);
+      });
+    }
+
+    myChart.clear();
+
+    myChart.setOption(initOption(dataX, dataY, gb));
 
   }, [props]);
 

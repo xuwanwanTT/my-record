@@ -1,9 +1,9 @@
 import React from 'react';
 
-const DirtyTalk = () => {
+const DirtyTalk = ({ data }) => {
   return (
-    <div>
-      <p></p>
+    <div className={'dirty-talk'}>
+      <p>{data || '放弃吧, 减啥减啊'}</p>
     </div>
   );
 };
