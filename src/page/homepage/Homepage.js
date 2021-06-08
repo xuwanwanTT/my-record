@@ -98,7 +98,6 @@ export default () => {
         resData.forEach(s => {
           const { date, food, weight, sport, foodData } = s;
           const { morning, evening } = weight;
-
           dataX.unshift(date);
           weightDataY.unshift(getAverage(morning, evening));
           foodDataY.unshift(foodData.total_kj);
@@ -119,7 +118,6 @@ export default () => {
       url: `/my-record/sentence`,
     })
       .then(res => {
-        console.log(res);
         setSentence(res.sentence);
       })
       .catch(err => {
