@@ -3,10 +3,6 @@ import './form.less';
 import MyInput from './module/MyInput.js';
 import LabelInput from './module/LabelInput.js';
 
-const checkChange = (data, newData) => {
-  return JSON.stringify(data) !== JSON.stringify(newData);
-}
-
 const FormList = ({ weight = {}, food = [
   { name: "早餐", data: [] },
   { name: "午餐", data: [] },

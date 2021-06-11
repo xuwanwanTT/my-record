@@ -1,15 +1,13 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import './homepage.less';
-import List from '../../component/list/List';
-import Line from '../../component/line/Line';
-import LineKJ from '../../component/line/LineKJ';
-// import InfoFillIn from '../../component/info-fill-in/FillIn';
-import EnergyDaily from '../../component/energy-daily/Page';
 import axios from 'axios';
+import moment from 'moment';
+import Line from '../../component/line/Line.js';
+import LineKJ from '../../component/line/LineKJ.js';
 import Dialog from '../../component/dialog/Dialog.js';
 import DirtyTalk from '../../component/dirty-talk/DirtyTalk.js';
 import FromList from '../../component/form/FormList.js';
-import moment from 'moment';
+import List from '../../component/list/List.js';
 
 const BMIGB = 22;
 
@@ -20,14 +18,12 @@ const WEIGHTGB = BMIGB * (HEIGHT * HEIGHT);
 const BASEURL = window.BASEURL;
 
 export default () => {
-  const [listData, setListData] = useState({ header: [], content: [], width: [] });
-  const [lineData, setLineData] = useState({ dataX: [], dataY: [], gb: 0 });
-  const [lineKjData, setLineKjData] = useState({ dataX: [], dataY: [], gb: 0 });
-  const energyRef = useRef();
   const [showForm, setShowForm] = useState(false);
-  const btnList = [
-    { name: '开启记录', fn: setShowForm },
-  ];
+  const [recordListShow, setRecordListShow] = useState(false);
+  const [dataX, setDataX] = useState([]);
+  const [weightDataY, setWeightDataY] = useState([]);
+  const [foodDataY, setFoodDataY] = useState([]);
+  const [sentence, setSentence] = useState('');
   const [date, setDate] = useState(moment().format('YYYY-MM-DD'));
   const [formData, setFormData] = useState({
     weight: JSON.stringify({}),
@@ -40,10 +36,10 @@ export default () => {
       { name: "零食", data: [] }
     ])
   });
-  const [dataX, setDataX] = useState([]);
-  const [weightDataY, setWeightDataY] = useState([]);
-  const [foodDataY, setFoodDataY] = useState([]);
-  const [sentence, setSentence] = useState('');
+
+  const btnList = [
+    { name: '开启记录', fn: setShowForm },
+  ];
 
   const postRecord = (data) => {
     axios({
@@ -171,6 +167,12 @@ export default () => {
           onChangeDate={getData}
           onSubmit={postRecord}
           onClose={() => { setShowForm(false) }} />
+      </Dialog>
+
+      <Dialog show={true || recordListShow}>
+        <List {...formData}
+          onChangeDate={getData}
+          onClose={() => { setRecordListShow(false) }} />
       </Dialog>
 
     </>
