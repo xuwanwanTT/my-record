@@ -23,6 +23,7 @@ export default () => {
   const [dataX, setDataX] = useState([]);
   const [weightDataY, setWeightDataY] = useState([]);
   const [foodDataY, setFoodDataY] = useState([]);
+  const [foodDataTotal, setFoodDataTotal] = useState({});
   const [sentence, setSentence] = useState('');
   const [date, setDate] = useState(moment().format('YYYY-MM-DD'));
   const [formData, setFormData] = useState({
@@ -34,11 +35,13 @@ export default () => {
       { name: "午餐", data: [] },
       { name: "晚餐", data: [] },
       { name: "零食", data: [] }
-    ])
+    ]),
+    foodTotal: JSON.stringify({}),
   });
 
   const btnList = [
     { name: '开启记录', fn: setShowForm },
+    { name: '详细记录', fn: setRecordListShow },
   ];
 
   const postRecord = (data) => {
@@ -76,7 +79,8 @@ export default () => {
             { name: "午餐", data: [] },
             { name: "晚餐", data: [] },
             { name: "零食", data: [] }
-          ]
+          ],
+          foodData: {}
         };
         for (let n in resFormData) {
           if (resData.length) {
@@ -169,7 +173,7 @@ export default () => {
           onClose={() => { setShowForm(false) }} />
       </Dialog>
 
-      <Dialog show={true || recordListShow}>
+      <Dialog show={recordListShow}>
         <List {...formData}
           onChangeDate={getData}
           onClose={() => { setRecordListShow(false) }} />
