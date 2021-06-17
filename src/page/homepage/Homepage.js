@@ -18,6 +18,10 @@ const WEIGHTGB = BMIGB * (HEIGHT * HEIGHT);
 const BASEURL = window.BASEURL;
 
 export default () => {
+  const userId = window.localStorage.getItem('userId');
+  if (!userId) {
+    window.location.hash = '/login';
+  }
   const [showForm, setShowForm] = useState(false);
   const [recordListShow, setRecordListShow] = useState(false);
   const [dataX, setDataX] = useState([]);
@@ -50,7 +54,7 @@ export default () => {
       method: 'post',
       url: '/my-record/join-record',
       data: {
-        userId: 1,
+        userId,
         ...data
       }
     }).then(res => {
@@ -130,6 +134,11 @@ export default () => {
     setShowForm(true);
   }
 
+  const logout = () => {
+    window.localStorage.clear();
+    window.location.reload();
+  };
+
   useEffect(() => {
     getData();
   }, []);
@@ -155,6 +164,8 @@ export default () => {
           }}>{s.name}</button>
         ))}
       </div>
+
+      <div className={'logout'} onClick={logout} />
 
       <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
         <Line dataX={dataX} dataY={weightDataY} gb={WEIGHTGB}
