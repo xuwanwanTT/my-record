@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import './homepage.less';
 import axios from 'axios';
 import moment from 'moment';
@@ -18,7 +18,7 @@ const WEIGHTGB = BMIGB * (HEIGHT * HEIGHT);
 const BASEURL = window.BASEURL;
 
 export default () => {
-  const userId = window.localStorage.getItem('userId');
+  const [userId, setUserId] = useState(window.localStorage.getItem('userId'));
   if (!userId) {
     window.location.hash = '/login';
   }
@@ -59,18 +59,18 @@ export default () => {
       }
     }).then(res => {
       setShowForm(false);
-      getData();
+      getData('', userId);
     }).catch(err => {
       alert(err);
     })
   };
 
-  const getData = (date) => {
+  const getData = (date, id) => {
     date && setDate(date);
     axios({
       baseURL: BASEURL,
       method: 'get',
-      url: `/my-record/data?userId=1${date ? '&date=' + date : ''}`,
+      url: `/my-record/data?userId=${id}${date ? '&date=' + date : ''}`,
     }).then(res => {
       const resData = res.data.data;
       if (date) {
@@ -130,7 +130,7 @@ export default () => {
   };
 
   const openDialog = (date) => {
-    getData(date);
+    getData(date, userId);
     setShowForm(true);
   }
 
@@ -140,8 +140,8 @@ export default () => {
   };
 
   useEffect(() => {
-    getData();
-  }, []);
+    getData('', userId);
+  }, [userId]);
 
   const todayWeight = weightDataY.slice(-1);
 
@@ -160,7 +160,7 @@ export default () => {
         {btnList.map((s, i) => (
           <button key={'btn' + i} onClick={() => {
             s.fn(true);
-            getData(date);
+            getData(date, userId);
           }}>{s.name}</button>
         ))}
       </div>
