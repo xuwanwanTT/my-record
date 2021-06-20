@@ -58,6 +58,8 @@ const List = ({ weight = {}, food = [
     setDateData(JSON.parse(date))
   }, [date]);
 
+  let averageWeight = getAverage(weightData.morning, weightData.evening);
+
   return (
     <div className={'form-list-wrap record-list'}>
 
@@ -79,10 +81,10 @@ const List = ({ weight = {}, food = [
         <div className={'value-item'}>
           <span>{weightData.morning}</span>
           <span>{weightData.evening}</span>
-          <span>{(weightData.morning * 100 + weightData.evening * 100) / 100}</span>
-          <span>{Math.ceil((weightData.morning * 100 + weightData.evening * 100) / 100 / 1.76 / 1.76)}</span>
-          <span>{judgeWeight(getAverage(weightData.morning, weightData.evening))}</span>
-          <span>{(getAverage(weightData.morning, weightData.evening) - WEIGHTGB).toFixed(2)}</span>
+          <span>{averageWeight}</span>
+          <span>{Math.ceil(averageWeight / 1.76 / 1.76)}</span>
+          <span>{judgeWeight(averageWeight)}</span>
+          <span>{(averageWeight - WEIGHTGB).toFixed(2)}</span>
         </div>
       </div>
 
