@@ -25,7 +25,7 @@
   "scripts": {
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
-    "push": "git add . && git commit -m feat:新增记录 && git push",
+    "push": "git add . && git commit -m feat:自动提交 && git push",
     "test": "react-app-rewired test",
     "eject": "react-scripts eject",
     "relate": "node ./src/relate.js"
