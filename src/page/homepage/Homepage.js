@@ -122,7 +122,7 @@ export default () => {
       url: `/my-record/sentence`,
     })
       .then(res => {
-        setSentence(res.sentence);
+        setSentence(res.data.data.sentence);
       })
       .catch(err => {
         console.log('请求标语数据错误', err);
