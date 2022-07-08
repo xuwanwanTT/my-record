@@ -14,7 +14,7 @@
     "hard-source-webpack-plugin": "^0.13.1",
     "less": "^4.1.1",
     "less-loader": "5.0.0",
-    "moment": "^2.29.1",
+    "moment": "^2.29.4",
     "progress-bar-webpack-plugin": "^2.1.0",
     "react": "^16.13.1",
     "react-app-rewired": "^2.1.8",
